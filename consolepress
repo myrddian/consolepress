@@ -1,0 +1,68 @@
+#!/usr/bin/env node
+// consolepress — single entry point for blog dev commands.
+// usage: ./consolepress <command> [args...]
+
+import { spawnSync } from 'child_process';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const SCRIPTS = join(__dirname, 'scripts');
+
+const commands = {
+  build: {
+    desc: 'render markdown → static HTML in public/',
+    run: () => node(join(SCRIPTS, 'build.js')),
+  },
+  serve: {
+    desc: 'serve public/ on http://localhost:8000',
+    run: () => sh('python3', ['-m', 'http.server', '8000', '--directory', 'public']),
+  },
+  new: {
+    desc: 'create a new post: consolepress new "post title"',
+    run: (args) => node(join(SCRIPTS, 'new-post.js'), ...args),
+  },
+  now: {
+    desc: 'append a now-page log entry: consolepress now "what i did today"',
+    run: (args) => node(join(SCRIPTS, 'now.js'), ...args),
+  },
+  help: {
+    desc: 'show this help',
+    run: () => printHelp(),
+  },
+};
+
+function node(script, ...args) {
+  return sh('node', [script, ...args]);
+}
+
+function sh(cmd, args) {
+  const r = spawnSync(cmd, args, { stdio: 'inherit', cwd: __dirname });
+  process.exit(r.status ?? 1);
+}
+
+function printHelp() {
+  const width = Math.max(...Object.keys(commands).map(k => k.length));
+  console.log('consolepress — static blog dev cli\n');
+  console.log('usage: ./consolepress <command> [args...]\n');
+  console.log('commands:');
+  for (const [name, { desc }] of Object.entries(commands)) {
+    console.log(`  ${name.padEnd(width)}  ${desc}`);
+  }
+}
+
+const [cmd, ...args] = process.argv.slice(2);
+
+if (!cmd || cmd === '-h' || cmd === '--help') {
+  printHelp();
+  process.exit(0);
+}
+
+const handler = commands[cmd];
+if (!handler) {
+  console.error(`unknown command: ${cmd}\n`);
+  printHelp();
+  process.exit(1);
+}
+
+handler.run(args);

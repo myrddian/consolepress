@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="{{language}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{title}}</title>
+  <meta name="description" content="{{description}}">
+  <meta property="og:title" content="{{title}}">
+  <meta property="og:description" content="{{description}}">
+  <meta property="og:url" content="{{url}}">
+  <meta property="og:type" content="website">
+  <link rel="alternate" type="application/rss+xml" title="{{site_title}}" href="/feed.xml">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230f1117'/%3E%3Ctext x='16' y='23' font-family='monospace' font-size='20' font-weight='700' fill='%237d8aff' text-anchor='middle'%3E~%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" class="site-title">{{site_title}}</a>
+    <nav class="site-nav">
+      <a href="/" class="nav-link">~</a>
+      <a href="/about/" class="nav-link">about</a>
+      <a href="/now/" class="nav-link">now</a>
+      <a href="/posts/" class="nav-link">posts</a>
+      <a href="/feed.xml" class="nav-link">rss</a>
+    </nav>
+  </header>
+  <main class="content">
+    {{body}}
+  </main>
+  <footer class="site-footer">
+    <span><span class="prompt">{{prompt}}</span> <span class="cursor"></span></span>
+    <span>{{location}}</span>
+  </footer>
+</body>
+</html>

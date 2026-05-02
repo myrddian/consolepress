@@ -1,0 +1,43 @@
+{
+  "name": "consolepress",
+  "version": "1.0.0",
+  "description": "Minimal static blog generator with Markdown content and a terminal-inspired default theme",
+  "type": "module",
+  "bin": {
+    "consolepress": "./consolepress"
+  },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "serve": "python3 -m http.server 8000 --directory public",
+    "new": "node scripts/new-post.js",
+    "now": "node scripts/now.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "blog",
+    "markdown",
+    "static-site-generator",
+    "terminal-theme"
+  ],
+  "files": [
+    "README.md",
+    "LICENSE",
+    "consolepress",
+    "site.config.js",
+    "scripts",
+    "templates",
+    "static",
+    "posts",
+    "pages"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "marked": "^14.0.0",
+    "gray-matter": "^4.0.3"
+  }
+}
