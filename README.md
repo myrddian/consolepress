@@ -106,9 +106,16 @@ Update `site.config.js` to set:
 - author
 - description
 - canonical URL
+- theme
 - terminal prompt label
 - footer location text
 - homepage intro copy
+
+Theme selection works like this:
+
+- use `theme: 'default'` for the built-in base theme
+- use `theme: 'cyberpunk_crt'` for the CRT variant included in `static/`
+- add your own `static/<name>.css` file and set `theme: '<name>'` to ship a custom theme
 
 ## Deploying
 

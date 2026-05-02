@@ -15,6 +15,7 @@ const POSTS_DIR = join(ROOT, 'posts');
 const PUBLIC_DIR = join(ROOT, 'public');
 const TEMPLATE_DIR = join(ROOT, 'templates');
 const PAGES_DIR = join(ROOT, 'pages');
+const STATIC_DIR = join(ROOT, 'static');
 
 marked.use({
   renderer: {
@@ -35,6 +36,14 @@ const tmpl = (name) => readFileSync(join(TEMPLATE_DIR, name), 'utf8');
 const render = (template, vars) =>
   template.replace(/\{\{\s*(\w+)\s*\}\}/g, (_, k) => vars[k] ?? '');
 const usedRoutes = new Map();
+const themeStylesheetLink = renderThemeStylesheetLink(SITE.theme);
+const sharedBaseVars = {
+  language: escapeHtml(SITE.language || 'en'),
+  site_title: escapeHtml(SITE.title),
+  prompt: escapeHtml(SITE.prompt || 'writer@console:~$'),
+  location: escapeHtml(SITE.location || 'internet'),
+  theme_stylesheet_link: themeStylesheetLink,
+};
 
 reserveRoute('/', 'index');
 reserveRoute('/posts/', 'posts archive');
@@ -84,14 +93,11 @@ for (const p of posts) {
     tags: renderTags(p.tags),
   });
   const html = render(baseTemplate, {
+    ...sharedBaseVars,
     title: escapeHtml(`${p.title} — ${SITE.title}`),
     description: escapeHtml(SITE.description),
     url: escapeHtml(`${SITE.url}${p.url}`),
     body: postBody,
-    language: escapeHtml(SITE.language || 'en'),
-    site_title: escapeHtml(SITE.title),
-    prompt: escapeHtml(SITE.prompt || 'writer@console:~$'),
-    location: escapeHtml(SITE.location || 'internet'),
   });
   const dir = join(PUBLIC_DIR, 'posts', p.slug);
   mkdirSync(dir, { recursive: true });
@@ -120,14 +126,11 @@ const indexBody = render(indexTemplate, {
   intro_secondary: escapeHtml(SITE.intro_secondary || ''),
 });
 const indexHtml = render(baseTemplate, {
+  ...sharedBaseVars,
   title: escapeHtml(SITE.title),
   description: escapeHtml(SITE.description),
   url: escapeHtml(SITE.url),
   body: indexBody,
-  language: escapeHtml(SITE.language || 'en'),
-  site_title: escapeHtml(SITE.title),
-  prompt: escapeHtml(SITE.prompt || 'writer@console:~$'),
-  location: escapeHtml(SITE.location || 'internet'),
 });
 writeFileSync(join(PUBLIC_DIR, 'index.html'), indexHtml);
 
@@ -139,14 +142,11 @@ const archiveBody = render(postsTemplate, {
   prompt: escapeHtml(SITE.prompt || 'writer@console:~$'),
 });
 const archiveHtml = render(baseTemplate, {
+  ...sharedBaseVars,
   title: escapeHtml(`posts — ${SITE.title}`),
   description: escapeHtml(`all posts on ${SITE.title}`),
   url: escapeHtml(`${SITE.url}/posts/`),
   body: archiveBody,
-  language: escapeHtml(SITE.language || 'en'),
-  site_title: escapeHtml(SITE.title),
-  prompt: escapeHtml(SITE.prompt || 'writer@console:~$'),
-  location: escapeHtml(SITE.location || 'internet'),
 });
 writeFileSync(join(PUBLIC_DIR, 'posts', 'index.html'), archiveHtml);
 
@@ -172,14 +172,11 @@ if (existsSync(PAGES_DIR)) {
         </footer>
       </article>`;
     const fullHtml = render(baseTemplate, {
+      ...sharedBaseVars,
       title: escapeHtml(`${data.title || slug} — ${SITE.title}`),
       description: escapeHtml(data.description || SITE.description),
       url: escapeHtml(url),
       body: pageBody,
-      language: escapeHtml(SITE.language || 'en'),
-      site_title: escapeHtml(SITE.title),
-      prompt: escapeHtml(SITE.prompt || 'writer@console:~$'),
-      location: escapeHtml(SITE.location || 'internet'),
     });
     const dir = join(PUBLIC_DIR, slug);
     mkdirSync(dir, { recursive: true });
@@ -189,7 +186,6 @@ if (existsSync(PAGES_DIR)) {
 
 // ---- copy static assets ----
 
-const STATIC_DIR = join(ROOT, 'static');
 if (existsSync(STATIC_DIR)) {
   copyDirSync(STATIC_DIR, PUBLIC_DIR);
 }
@@ -259,6 +255,18 @@ function copyDirSync(srcDir, destDir) {
       copyFileSync(srcPath, destPath);
     }
   }
+}
+
+function renderThemeStylesheetLink(theme) {
+  if (!theme || theme === 'default') return '';
+
+  const filename = theme.endsWith('.css') ? theme : `${theme}.css`;
+  const filepath = join(STATIC_DIR, filename);
+  if (!existsSync(filepath)) {
+    throw new Error(`theme stylesheet not found: static/${filename}`);
+  }
+
+  return `<link rel="stylesheet" href="/${escapeHtml(filename)}">`;
 }
 
 console.log(`built ${posts.length} posts → ${PUBLIC_DIR}`);

@@ -1,0 +1,149 @@
+/* Cyberpunk CRT theme for ConsolePress.
+   Load this after styles.css to override the default palette and add scanlines. */
+
+:root {
+  --bg-base: #080d08;
+  --bg-surface: #0c140c;
+  --bg-panel: #101910;
+  --bg-raised: #132013;
+
+  --border-subtle: #1f321f;
+  --border-default: #294229;
+  --border-active: #426742;
+
+  --accent: #69ff7c;
+  --accent-muted: rgba(105, 255, 124, 0.12);
+  --accent-bright: #c9ffd2;
+
+  --text-primary: #d8f7dc;
+  --text-secondary: #9cca9d;
+  --text-muted: #6c9a70;
+
+  --crt-shadow: rgba(105, 255, 124, 0.2);
+  --crt-shadow-strong: rgba(105, 255, 124, 0.45);
+}
+
+html,
+body {
+  background:
+    radial-gradient(circle at top, rgba(105, 255, 124, 0.05), transparent 45%),
+    linear-gradient(180deg, #070c07 0%, #0b120b 100%);
+  color: var(--text-primary);
+  text-shadow: 0 0 2px var(--crt-shadow);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.18) 0px,
+    rgba(0, 0, 0, 0.18) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 100;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(105, 255, 124, 0.045) 50%,
+    transparent 100%
+  );
+  animation: crt-drift 8s linear infinite;
+  pointer-events: none;
+  z-index: 101;
+}
+
+@keyframes crt-drift {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after {
+    animation: none;
+  }
+}
+
+.site-header,
+.site-footer {
+  border-color: var(--border-default);
+  background: rgba(8, 13, 8, 0.55);
+  box-shadow: 0 0 0 1px rgba(105, 255, 124, 0.04);
+}
+
+.site-title,
+.post-title,
+.cmd-text,
+.post-link,
+.dir-listing .name,
+.post-content a {
+  color: var(--accent-bright);
+  text-shadow: 0 0 8px var(--crt-shadow);
+}
+
+.site-title::before {
+  background: linear-gradient(135deg, var(--accent), #d8ffd8);
+  box-shadow: 0 0 0 4px rgba(105, 255, 124, 0.1), 0 0 12px rgba(105, 255, 124, 0.18);
+}
+
+.nav-link,
+.prompt,
+.post-date,
+.post-date-meta,
+.dir-listing .perm,
+.dir-listing .size,
+.dir-listing .desc,
+.output,
+.back-link {
+  color: var(--text-muted);
+}
+
+.content,
+.term-session,
+.post {
+  position: relative;
+  z-index: 1;
+}
+
+.dir-listing,
+.recent-posts,
+.post-content pre,
+.post-content code,
+.post-content blockquote,
+.now-section {
+  background-color: rgba(12, 20, 12, 0.45);
+}
+
+.post-row:hover,
+.dir-listing .name a:hover,
+.post-content a:hover,
+.nav-link:hover {
+  background: rgba(105, 255, 124, 0.06);
+}
+
+.post-content code,
+.post-content pre,
+.post-content blockquote,
+.post-content table,
+.post-footer {
+  border-color: var(--border-default);
+}
+
+.tag {
+  background: rgba(105, 255, 124, 0.12);
+  color: var(--accent-bright);
+  box-shadow: inset 0 0 0 1px rgba(105, 255, 124, 0.15);
+}
+
+.cursor {
+  box-shadow: 0 0 8px var(--crt-shadow-strong);
+}
