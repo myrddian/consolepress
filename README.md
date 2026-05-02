@@ -111,6 +111,23 @@ Update `site.config.js` to set:
 - footer location text
 - homepage intro copy
 
+Example:
+
+```js
+export default {
+  title: 'My Site',
+  author: 'Your Name',
+  description: 'Notes on software and systems.',
+  url: 'https://example.com',
+  language: 'en',
+  theme: 'cyberpunk_crt',
+  prompt: 'writer@console:~$',
+  location: 'internet',
+  intro: 'builder. writer. notes on software, systems, and things worth keeping.',
+  intro_secondary: 'small static blog starter with markdown input and plain HTML output.',
+};
+```
+
 Theme selection works like this:
 
 - use `theme: 'default'` for the built-in base theme
