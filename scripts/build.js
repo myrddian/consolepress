@@ -115,7 +115,7 @@ const renderRows = (list) => list.map(p => `
       <a class="post-link" href="${p.url}">${escapeHtml(p.title)}</a>
     </div>`).join('');
 
-const recentLimit = 10;
+const recentLimit = 3;
 const recentPosts = posts.slice(0, recentLimit);
 const indexBody = render(indexTemplate, {
   count: posts.length,
